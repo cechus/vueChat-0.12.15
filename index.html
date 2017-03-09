@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.2/vue.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.15/vue.min.js"></script>
+</head>
+<body id="chat">
+<div >
+	
+	<h1>title {{messages.length}} </h1>
+
+	<ul id="mess">
+		<!-- <li v-for="mes in messages"> {{mes}} </li> -->
+		<li v-repeat="message: messages"> {{message}}  </li>
+	</ul>
+	<form v-on="submit: send">
+		<input v-model="message">
+		<button>Send</button>
+	</form>
+</div>
+
+	<script>
+
+		var socket=io();
+		var app=new Vue({
+			el: '#chat',
+
+			data: {
+				messages:[],
+				message: ''
+			},
+
+			ready:function () {
+				socket.on('chat.message',function (message) {
+					this.messages.push(message);
+				}.bind(this));
+			},
+
+			methods: {
+				send: function(e) {
+					socket.emit('chat.message',this.message);
+					//alert("hola");
+					console.log("hola");
+					e.preventDefault();
+				}
+			}
+		})
+	</script>
+</body>
+</html>
